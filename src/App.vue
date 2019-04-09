@@ -167,6 +167,8 @@ body {
   }
   & > label {
     margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   .input-group-text {
@@ -181,6 +183,11 @@ select {
   background: #f5f4f8 !important;
   border-radius: 5px !important;
   border: none !important;
+  font-size: 14px !important;
+
+  &::placeholder {
+    font-size: 14px;
+  }
 }
 
 .submit-button {
