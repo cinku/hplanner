@@ -132,7 +132,7 @@ body {
 }
 .planner-section {
   width: 400px;
-  height: 100vh;
+  min-height: 100vh;
   box-shadow: 3px 0px 16px rgba(0, 0, 0, 0.2);
   z-index: 3;
   @media screen and (max-width: 1024px) {
@@ -158,6 +158,7 @@ body {
     height: 50px;
     box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.31);
     transition: background 0.3s ease-in-out;
+    border: none;
     &:hover {
       background: darken(#55B0F3, 10%);
     }

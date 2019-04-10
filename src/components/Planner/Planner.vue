@@ -41,9 +41,10 @@ export default {
   .planner {
     padding: 40px;
     background: #FFFFFF;
-    height: 100vh;
+    min-height: 100vh;
   }
   .cancel-link {
     text-decoration: underline;
+    color: #55b0f3;
   }
 </style>

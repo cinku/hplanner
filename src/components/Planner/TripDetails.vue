@@ -45,7 +45,7 @@
         <div class="trip-card__info">{{hotelCost(tripData.hotelCost)}}</div>
       </div>
       <div class="trip-card__content">
-        <a :href="tripData.hotelLink" target="_blank">{{tripData.hotelName}}</a>
+        <a :href="tripData.hotelUrl" target="_blank">{{tripData.hotelName}}</a>
       </div>
     </div>
     <div class="trip-card">
@@ -93,7 +93,7 @@ export default {
     },
     flightSeparateCost(cost) {
       let separateCost = cost.replace('€', '');
-      separateCost = +separateCost / 2;
+      separateCost = Math.floor(+separateCost / 2);
       return `${separateCost}€`;
     },
     hotelCost(cost) {
@@ -108,7 +108,7 @@ export default {
     tripCost(flightCost, hotelCost) {
       const flight = flightCost.replace('€', '');
       const hotel = hotelCost.replace('€', '');
-      const cost = +hotel + +flight;
+      const cost = +hotel + +(Math.floor(flight / 2) * 2);
       return `${cost}€`;
     },
   },
@@ -171,7 +171,7 @@ export default {
   margin-top: 10px;
   font-weight: 600;
   & > a {
-    color: #6f7386;
+    color: #55b0f3;
   }
 }
 
