@@ -11,7 +11,7 @@ import (
 )
 
 var USERS_COUNT = 60
-var API_URL = "https://firestore.googleapis.com/v1/projects/PROJECT_NAME/databases/(default)/documents/requests"
+var API_URL = "https://firestore.googleapis.com/v1/projects/ittalkvue/databases/(default)/documents/requests"
 var SLEEP_TRESHOLD = 7
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 		"Copenhagen",
 		"Lisbon",
 		"London",
-		"Marsille",
+		"Marseille",
 		"Milan",
 		"Palma Mallorca",
 		"Prague",
@@ -34,10 +34,9 @@ func main() {
 		"Zadar",
 	}
 	months := []string{
-		"Kwiecień",
-		"Maj",
-		"Czerwiec",
-		"Lipiec",
+		"May",
+		"June",
+		"July",
 	}
 
 	var requests []string
@@ -86,7 +85,7 @@ func decideIfYouNeedToSleep() {
 func createRequest(city string, month string) string {
 	client := &http.Client{}
 	bodyString := []byte(fmt.Sprintf(`{ "fields": { "city": { "stringValue": "%s" }, "month": { "stringValue": "%s" },
-	"name": { "stringValue": "testUser" }, "email": { "stringValue": "" }, "status": { "stringValue": "processing" } } }`, city, month))
+	"name": { "stringValue": "testUser" }, "email": { "stringValue": "" }, "status": { "stringValue": "processing" }, "canceled": { "booleanValue": false } } }`, city, month))
 	req, err := http.NewRequest("POST", API_URL, bytes.NewBuffer(bodyString))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
