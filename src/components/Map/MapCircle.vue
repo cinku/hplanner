@@ -1,13 +1,18 @@
 <template>
-  <l-feature-group v-if="radius > 0">
+  <l-feature-group v-if="hits > 0">
     <l-marker :lat-lng="center">
-      <l-tooltip>{{name}}</l-tooltip>
+      <l-tooltip>
+        <b>{{name}}</b><br />
+        <span v-if="hits" style="color: gray;">
+          Liczba osób: {{hits}}
+        </span>
+      </l-tooltip>
     </l-marker>
     <l-circle :lat-lng="center" :radius="radius" :color="color" :fill-color="color"></l-circle>
     <l-circle
-      v-if="done > 0"
+      v-if="doneRatio > 0"
       :lat-lng="center"
-      :radius="done * hitWeight"
+      :radius="doneRatio * radius"
       :color="'green'"
       :fill-color="'green'"
     ></l-circle>
@@ -18,7 +23,7 @@
 import {
   LCircle, LTooltip, LFeatureGroup, LMarker,
 } from 'vue2-leaflet';
-import { getRequestsForCity } from '../../firebase';
+import { getRequestsCollection } from '../../firebase';
 
 export default {
   components: {
@@ -27,31 +32,37 @@ export default {
     LMarker,
     LFeatureGroup,
   },
-  props: ['center', 'name'],
+  props: ['center', 'name', 'engName'],
   data() {
     return {
       color: '#0C81E4',
+      hits: 0,
       radius: 0,
-      hitWeight: 20000,
-      done: 0,
+      maxRadius: 400000,
+      minRadius: 80000,
+      doneRatio: 0,
+      growthSlowingFactor: 10,
     };
   },
   mounted() {
-    if (this.name) {
-      getRequestsForCity(this.name).onSnapshot((snapshot) => {
-        const hits = snapshot.docs.length;
-        this.radius = hits * this.hitWeight;
-        if (hits > 0) {
-          let done = 0;
-          snapshot.forEach((doc) => {
-            if (doc.data().status === 'done') {
-              done += 1;
-            }
-            this.done = done;
-          });
-        }
-      });
-    }
+    getRequestsCollection().where('canceled', '==', false).onSnapshot(((snapshot) => {
+      const totalHits = snapshot.docs.length;
+      if (totalHits > 0) {
+        const requestsForCity = snapshot.docs.filter(r => r.data().city === this.engName);
+        this.hits = requestsForCity.length;
+        this.hitsDone = requestsForCity.filter(r => r.data().status === 'done').length;
+        this.doneRatio = this.hitsDone / this.hits;
+        const radiusRange = this.maxRadius - this.minRadius;
+        this.radius = (this.hits / totalHits) * radiusRange
+          * (Math.min(this.growthSlowingFactor, totalHits) / this.growthSlowingFactor)
+          + this.minRadius;
+      } else {
+        this.hits = 0;
+        this.hitsDone = 0;
+        this.doneRatio = 0;
+        this.radius = 0;
+      }
+    }));
   },
 };
 </script>

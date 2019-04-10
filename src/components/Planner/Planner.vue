@@ -6,6 +6,9 @@
       <trip-details :trip-data="tripData" v-else/>
     </div>
     <Preloader v-else/>
+    <div v-if="searching || showTrip">
+      <small><a href="#" class="cancel-link" v-on:click="cancel">Anuluj</a></small>
+    </div>
   </div>
 </template>
 
@@ -27,6 +30,9 @@ export default {
     handleSubmit(formData) {
       this.$emit('submitLocation', formData);
     },
+    cancel() {
+      this.$emit('cancel');
+    },
   },
 };
 </script>
@@ -36,5 +42,8 @@ export default {
     padding: 40px;
     background: #FFFFFF;
     height: 100vh;
+  }
+  .cancel-link {
+    text-decoration: underline;
   }
 </style>

@@ -14,6 +14,7 @@
         v-for="(location, index) of cities"
         :key="index"
         :name="location.name"
+        :engName="location.engName"
         :center="location.location"
         :color="'red'"
       />
